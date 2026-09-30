@@ -1,5 +1,4 @@
 name: Build and Push Docker Image
-
 on:
   push:
     branches:
@@ -7,27 +6,21 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
-
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 质量闸门：语法检查 + 结构性回归测试。任一失败即终止，绝不构建/推送坏镜像。
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      # 移动公众协议侧车的运行时依赖：回归测试里有一批**真实拉起侧车**的断言，
-      # 缺了这些包（曾经的 ModuleNotFoundError: No module named 'Crypto'）会让侧车级
-      # 断言退化成"只验证未就绪"，闸门形同虚设 —— 与 Dockerfile 保持一致装齐。
       - name: Set up Python (sidecar runtime)
         uses: actions/setup-python@v5
         with:
@@ -48,41 +41,40 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      # 1. 登录 GitHub Packages (GHCR)
+      # 登录 GHCR（你的仓库 mafancn）
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: ${{ github.actor }}
+          username: ${{ shturl.cc/r8 }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # 2. 登录 Docker Hub (明确绑定账号 learycn，支持 LEARYCN / DOCKERHUB_TOKEN 等 Secret)
+      # 登录 DockerHub，需要在仓库 Secrets 配置 DOCKERHUB_USERNAME、DOCKERHUB_TOKEN
       - name: Log in to Docker Hub
         id: dockerhub-login
         continue-on-error: true
         env:
-          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME || 'learycn' }}
-          DOCKER_PASS: ${{ secrets.LEARYCN || secrets.DOCKERHUB_TOKEN || secrets.DOCKER_PASSWORD }}
+          DOCKER_USER: ${{ secrets.DOCKERHUB_USERNAME || 'mafancn' }}
+          DOCKER_PASS: ${{ secrets.DOCKERHUB_TOKEN }}
         if: env.DOCKER_PASS != ''
         uses: docker/login-action@v3
         with:
           username: ${{ env.DOCKER_USER }}
           password: ${{ env.DOCKER_PASS }}
 
-      # 3. 动态配置镜像目标列表 (推送至 learycn/ctyun-dashboard 与 ghcr.io/muyicn/ctyun-dashboard)
+      # 自动拼接镜像地址
       - name: Determine Docker images
         id: image-targets
         run: |
           IMAGES="ghcr.io/${{ github.repository }}"
           if [ "${{ steps.dockerhub-login.outcome }}" = "success" ]; then
             IMAGES="${IMAGES}
-          learycn/ctyun-dashboard"
+          mafancn/ctyun-dashboard"
           fi
           echo "images<<EOF" >> $GITHUB_OUTPUT
           echo "$IMAGES" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      # 4. 提取镜像元数据与多架构标签
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v5
@@ -93,7 +85,6 @@ jobs:
             type=ref,event=branch
             type=semver,pattern={{version}}
 
-      # 5. 构建多架构镜像 (linux/amd64, linux/arm64) 并推送
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
         with:
