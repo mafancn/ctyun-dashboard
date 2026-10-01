@@ -3968,7 +3968,7 @@ async function openSettingsModal() {
       document.getElementById("set-allow-reg").checked = settings.allowRegistration === true;
     }
     if (document.getElementById("set-default-quota")) {
-      document.getElementById("set-default-quota").value = settings.defaultQuota || 2;
+      document.getElementById("set-default-quota").value = settings.defaultQuota || 0;
     }
 
     openModal("settings-modal");
@@ -3997,7 +3997,7 @@ async function saveSettings() {
     keepAliveSeconds: 60,
     pulseIntervalSeconds: 30,
     allowRegistration: document.getElementById("set-allow-reg") ? document.getElementById("set-allow-reg").checked : false,
-    defaultQuota: document.getElementById("set-default-quota") ? parseInt(document.getElementById("set-default-quota").value) || 2 : 2,
+    defaultQuota: document.getElementById("set-default-quota") ? parseInt(document.getElementById("set-default-quota").value) || 0 : 0,
     cron: {
       executeTime: document.getElementById("cron-task-time") ? document.getElementById("cron-task-time").value.trim() : "01:20",
       enableSubCron: document.getElementById("cron-enable-sub") ? document.getElementById("cron-enable-sub").checked : false,
