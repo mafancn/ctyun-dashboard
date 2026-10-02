@@ -891,7 +891,7 @@ function getDefaultConfig() {
       keepAliveSeconds: 60,
       pulseIntervalSeconds: 30,
       allowRegistration: false, // 默认不开放注册，必须由管理员后台手动开启
-      defaultQuota: 2,         // 普通用户默认配额 2 台
+      defaultQuota: 0,         // 普通用户默认配额 0 台
       cron: {
         executeTime: '01:20',
         enableSubCron: false,
@@ -4036,7 +4036,7 @@ function rewardNeedsDesktop(prodId, prodType) {
       jsonResponse(res, {
         isLoggedIn: false,
         allowRegistration: appConfig.settings?.allowRegistration === true,
-        defaultQuota: appConfig.settings?.defaultQuota || 2,
+        defaultQuota: appConfig.settings?.defaultQuota || 0,
         systemTitle: appConfig.settings?.systemTitle || '天翼云/移动云电脑保活签到中心',
         systemSubtitle: appConfig.settings?.systemSubtitle || '多账号长连接保活守护 · 多运营商支持 · 每日签到打卡 · 智能挂机'
       });
@@ -4401,7 +4401,7 @@ function rewardNeedsDesktop(prodId, prodType) {
     const currentUser = authManager.getUserById(currentOwnerId);
     if (currentUser && currentUser.role !== 'admin') {
       const currentOwned = appConfig.accounts.filter(a => a.ownerId === currentOwnerId).length;
-      const userMax = currentUser.maxQuota || 2;
+      const userMax = currentUser.maxQuota || 0;
       if (currentOwned >= userMax) {
         jsonResponse(res, {
           error: `已达到云电脑添加配额上限（当前配额: ${userMax}台），无法继续添加！请联系管理员提高配额。`
@@ -4496,7 +4496,7 @@ function rewardNeedsDesktop(prodId, prodType) {
     const currentUser = authManager.getUserById(currentOwnerId);
     if (currentUser && currentUser.role !== 'admin') {
       const currentOwned = appConfig.accounts.filter(a => a.ownerId === currentOwnerId).length;
-      const userMax = currentUser.maxQuota || 2;
+      const userMax = currentUser.maxQuota || 0;
       if (currentOwned >= userMax) {
         jsonResponse(res, { error: `已达到云电脑添加配额上限（当前配额: ${userMax}台），无法继续添加！请联系管理员提高配额。` }, 400);
         return;
@@ -4684,7 +4684,7 @@ function rewardNeedsDesktop(prodId, prodType) {
     // 配额限制判断：普通用户受配额上限约束，管理员无限制
     if (currentUser && currentUser.role !== 'admin') {
       const currentOwned = appConfig.accounts.filter(a => a.ownerId === currentOwnerId).length;
-      const userMax = currentUser.maxQuota || 2;
+      const userMax = currentUser.maxQuota || 0;
       if (currentOwned >= userMax) {
         jsonResponse(res, {
           error: `已达到云电脑添加配额上限（当前配额: ${userMax}台），无法继续添加！请联系管理员提高配额。`
@@ -5185,7 +5185,7 @@ function rewardNeedsDesktop(prodId, prodType) {
         const currentUser = authManager.getUserById(currentOwnerId);
         if (currentUser && currentUser.role !== 'admin') {
           const currentOwned = appConfig.accounts.filter(a => a.ownerId === currentOwnerId).length;
-          const userMax = currentUser.maxQuota || 2;
+          const userMax = currentUser.maxQuota || 0;
           if (currentOwned >= userMax) {
             jsonResponse(res, {
               error: `已达到云电脑添加配额上限（当前配额: ${userMax}台），无法继续添加！请联系管理员提高配额。`
@@ -6365,7 +6365,7 @@ function rewardNeedsDesktop(prodId, prodType) {
     // 配额计算
     if (currentUser && currentUser.role !== 'admin') {
       const currentOwned = mode === 'overwrite' ? 0 : appConfig.accounts.filter(a => a.ownerId === targetOwnerId).length;
-      if (currentOwned + importAccounts.length > (currentUser.maxQuota || 2)) {
+      if (currentOwned + importAccounts.length > (currentUser.maxQuota || 0)) {
         jsonResponse(res, {
           error: `导入失败：导入后账号数量 (${currentOwned + importAccounts.length}) 超出允许配额上限 (${currentUser.maxQuota}台)！`
         }, 400);
