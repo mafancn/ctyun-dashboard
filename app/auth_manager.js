@@ -32,7 +32,7 @@ class AuthManager {
         userId: s.userId,
         username: s.username || '',
         role: '',
-        maxQuota: 2,
+        maxQuota: 0,
         remember: true,
         createdAt: s.createdAt || 0,
         expiresAt: s.expiresAt,
@@ -70,7 +70,7 @@ class AuthManager {
       userId: user.id,
       username: user.username,
       role: user.role,
-      maxQuota: user.maxQuota || 2,
+      maxQuota: user.maxQuota || 0,
       remember: !!remember, // 勾选"30 天内免登录"才落盘
       createdAt: now,
       expiresAt: now + 30 * 24 * 3600 * 1000 // 30天
@@ -169,7 +169,7 @@ class AuthManager {
       return { success: false, error: '该用户名已被注册，请直接登录' };
     }
 
-    const defaultQuota = cfg.settings?.defaultQuota || 2;
+    const defaultQuota = cfg.settings?.defaultQuota || 0;
     const newUser = {
       id: 'u_' + crypto.randomUUID().substring(0, 8),
       username: cleanUser,
@@ -231,7 +231,7 @@ class AuthManager {
         id: u.id,
         username: u.username,
         role: u.role,
-        maxQuota: u.maxQuota || 2,
+        maxQuota: u.maxQuota || 0,
         accountsCount,
         createdAt: u.createdAt
       };
@@ -242,7 +242,7 @@ class AuthManager {
     const cfg = this.configManager.config;
     const user = (cfg.users || []).find(u => u.id === userId);
     if (!user) return false;
-    user.maxQuota = parseInt(maxQuota) || 2;
+    user.maxQuota = parseInt(maxQuota) || 0;
     this.configManager.saveConfig();
     return true;
   }
