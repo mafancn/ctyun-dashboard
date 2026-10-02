@@ -4728,7 +4728,7 @@ async function openAdminUsersModal() {
         <td style="padding: 10px 8px; font-weight: 600; color: #38bdf8; white-space: nowrap;">${u.accountsCount || 0} 台</td>
         <td style="padding: 10px 8px; white-space: nowrap;">
           <div style="display: flex; align-items: center; gap: 6px;">
-            <input type="number" class="form-control" style="width: 70px; padding: 4px 6px; font-size: 12px;" id="quota-input-${u.id}" value="${u.maxQuota || 2}" min="0">
+            <input type="number" class="form-control" style="width: 70px; padding: 4px 6px; font-size: 12px;" id="quota-input-${u.id}" value="${u.maxQuota || 0}" min="0">
             <button class="btn btn-sm btn-primary" onclick="saveUserQuota('${u.id}')" style="white-space: nowrap; padding: 4px 8px;">保存配额</button>
           </div>
         </td>
