@@ -68,7 +68,7 @@
 
 1. **下载或克隆本项目**：
    ```bash
-   git clone https://github.com/muyicn/ctyun-dashboard.git
+   git clone https://github.com/mafancn/ctyun-dashboard.git
    cd ctyun-dashboard
    ```
 2. **直接双击运行 `start_dashboard.bat`**：
@@ -89,7 +89,7 @@ docker run -d \
   -p 8571:8571 \
   -v $(pwd)/data:/app/data \
   --restart unless-stopped \
-  learycn/ctyun-dashboard:latest
+  mafancn/ctyun-dashboard:latest
 ```
 
 或使用 GitHub Packages (GHCR) 镜像：
@@ -99,7 +99,7 @@ docker run -d \
   -p 8571:8571 \
   -v $(pwd)/data:/app/data \
   --restart unless-stopped \
-  ghcr.io/muyicn/ctyun-dashboard:latest
+  ghcr.io/mafancn/ctyun-dashboard:latest
 ```
 
 #### 2. 使用 `docker-compose.yml` 部署：
@@ -109,7 +109,7 @@ version: '3.8'
 
 services:
   ctyun-dashboard:
-    image: learycn/ctyun-dashboard:latest # 或 ghcr.io/muyicn/ctyun-dashboard:latest
+    image: mafancn/ctyun-dashboard:latest # 或 ghcr.io/mafancn/ctyun-dashboard:latest
     container_name: ctyun-dashboard
     restart: unless-stopped
     ports:
@@ -150,7 +150,7 @@ docker compose up -d
 ### 方式三：从源码直接构建运行
 
 ```bash
-git clone https://github.com/muyicn/ctyun-dashboard.git
+git clone https://github.com/mafancn/ctyun-dashboard.git
 cd ctyun-dashboard
 
 # 使用 Docker Compose 本地构建
